@@ -1,0 +1,218 @@
+body {
+    background: linear-gradient(to right, #a869df, #4a00e0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.home-button,
+.back-button {
+    position: absolute;
+    top: 20px;
+    padding: 10px 20px;
+    background-color: #4a00e0;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.home-button {
+    right: 20px;
+}
+
+.back-button {
+    left: 20px;
+}
+
+.login-box,
+.recording-page,
+.audio-recordings-page {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 80%;
+    text-align: center;
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.login-box.active,
+.recording-page.active,
+.audio-recordings-page.active {
+    display: block;
+}
+
+.login-box h2,
+.recording-page h2,
+.audio-recordings-page h2 {
+    margin-top: 0;
+}
+
+.login-box input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.login-box button,
+.bottom-button {
+    background-color: #4a00e0;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.bottom-button {
+    width: auto;
+    margin-top: 0;
+}
+
+.recording-box {
+    background-color: #f0f0f0;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    margin: auto;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.recording-box:hover {
+    background-color: #e0e0e0;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.control-button {
+    color: white;
+    padding: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 15px;
+    transition: background-color 0.3s ease;
+}
+
+.control-button.start {
+    background-color: #4caf50;
+}
+
+.control-button.start:hover {
+    background-color: #45a049;
+}
+
+.control-button.pause,
+.control-button.resume {
+    background-color: #ffeb3b;
+    color: black;
+}
+
+.control-button.pause:hover,
+.control-button.resume:hover {
+    background-color: #fdd835;
+}
+
+.control-button.stop {
+    background-color: #f44336;
+}
+
+.control-button.stop:hover {
+    background-color: #e53935;
+}
+
+.control-button span {
+    font-size: 18px;
+}
+
+.bottom-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.audio-recordings-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.audio-recordings-list li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.audio-recordings-list li::before {
+    content: attr(data-index);
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    transform: translateY(-50%);
+    background-color: #6C63FF;
+    color: white;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.audio-recordings-list li .delete-button {
+    margin-left: auto;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.audio-recordings-list li .delete-button i {
+    font-size: 18px;
+}
+
+.bottom-button.fill-form {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #6C63FF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

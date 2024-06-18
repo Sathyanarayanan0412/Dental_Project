@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Transcript App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-nCZ/buGzF8b3+XaHbFJyVBLQV3GeTAR9MJ0bEq+8C8yBM7dvh7El1amzWnLy/tIaBZfEuV6lhns6NE52G8Kk6Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" type="image/png" href="Dental Logo.png">
+    
+        
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #4cb8c4, #3cd3ad);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        } 
+
+        .home-button,
+        .back-button {
+            position: absolute;
+            top: 20px;
+            padding: 10px 20px;
+            background-color: #3092ad;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .home-button {
+            right: 20px;
+        }
+
+        .back-button {
+            left: 20px;
+        }
+
+        .login-box,
+        .recording-page{
+            box-shadow: (4px, 8px, and rgba(0, 0, 0, 0.1));
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 80%;
+            text-align: center;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            
+        }
+        .audio-recordings-page{
+            box-shadow: (4px, 8px, and rgba(0, 0, 0, 0.1));
+            height: 400px;
+            width: 800px;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            text-align: center;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .login-box.active,
+        .recording-page.active,
+        .audio-recordings-page.active {
+            display: block;
+        }
+
+        .login-box h2,
+        .recording-page h2,
+        .audio-recordings-page h2 {
+            margin-top: 0;
+        }
+
+        .login-box input,
+        .recording-page input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .login-box button,
+        .bottom-button {
+            
+            background-color: #1694e2;
+            color: white;
+            padding: 10px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 50%;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+       
+
+        .bottom-button {
+            width: auto;
+            margin-top: 0;
+        }
+
+        .recording-box {
+            background-color: #76e385;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px ;
+            border-radius: 50%;
+            margin: auto;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        .recording-box:hover {
+            background-color: #34d44a;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .control-button {
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .control-button.start {
+            background-color: #4caf50;
+        }
+
+        .control-button.start:hover {
+            background-color: #45a049;
+        }
+
+        .control-button.pause,
+        .control-button.resume {
+            background-color: #ffeb3b;
+            color: black;
+        }
+
+        .control-button.pause:hover,
+        .control-button.resume:hover {
+            background-color: #fdd835;
+        }
+
+        .control-button.stop {
+            background-color: #f44336;
+        }
+
+        .control-button.stop:hover {
+            background-color: #e53935;
+        }
+
+        .control-button span {
+            font-size: 16px;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+        .bottom-buttons-2{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+
+        }
+
+        .recording-box .recording-text {
+            display: block;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+
+        .audio-recordings-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .audio-recordings-list li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .audio-recordings-list li::before {
+            content: attr(data-index);
+            position: absolute;
+            top: 50%;
+            left: -30px;
+            transform: translateY(-50%);
+            background-color: #6C63FF;
+            color: white;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            border-radius: 50%;
+        }
+
+        .audio-recordings-list li .delete-button {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 25%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-recordings-list li .download-button {
+            position: absolute;
+            top: 50%;
+            right: 60px;
+            transform: translateY(-50%);
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 25%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-recordings-list li .delete-button i,
+        .audio-recordings-list li .download-button i {
+            font-size: 16px;
+
+            
+        }
+
+        .audio-recordings-list li input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .audio-recordings-list li.selected {
+            background-color: #e0e0e0;
+        }
+
+        .bottom-button.fill-form {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #5a3cc8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .audio-recordings-button {
+            background-color: #514bc8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .audio-recordings-button:hover {
+            background-color: #5943d6;
+        }
+
+        .patient-name-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .page-title {
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stopwatch {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .navbar {
+           
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .navbar img {
+            max-width: 80px; 
+            max-height: 80px; 
+            vertical-align: middle;
+        }
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            max-width: 80%;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        
+
+       
+    </style>
+</head>
+
+<body>
+    <video autoplay muted loop class="video-background">
+        <source src="dental_video.mp4" type="video/mp4">
+        
+    </video>
+    
+
+    <div class="login-box active">
+        
+        <div class="navbar">
+            <img src="Dental Logo.png" alt="Logo">
+        </div>
+        <h2>Audio Transcript App</h2>
+        <input type="text" placeholder="Name of the Doctor" id="doctorName">
+        <input type="text" placeholder="Location" id="location">
+        <button id="loginButton">Login</button>
+        
+    </div>
+
+    <div class="recording-page">
+        <button class="home-button">Home</button>
+        
+        <h2>Recording Page</h2>
+        <input type="text" placeholder="Patient Name" class="patient-name-input">
+        <div class="recording-box" onclick="startRecording()">
+            <i class="fas fa-microphone-alt" style="font-size: 48px;"></i>
+            <span class="recording-text">Start Recording</span>
+        </div>
+        <div class="stopwatch">00:00</div>
+        <div class="control-buttons">
+            <button class="control-button pause" onclick="pauseRecording()">
+                <i class="fas fa-pause"></i>
+                <span>Pause</span>
+            </button>
+            <button class="control-button resume" onclick="resumeRecording()" style="display:none;">
+                <i class="fas fa-play"></i>
+                <span>Resume</span>
+            </button>
+            <button class="control-button stop" onclick="stopRecording()">
+                <i class="fas fa-stop"></i>
+                <span>Stop</span>
+            </button>
+        </div>
+        <div class="bottom-buttons">
+            <button class="bottom-button delete-recording-button" onclick="deleteRecording()">Delete</button>
+            <button class="bottom-button submit-recording-button" onclick="submitRecording()">Submit</button>
+        </div>
+        <div class="bottom-buttons-2">
+            <button class="bottom-button audio-recordings-button" onclick="goToAudioRecordings()">Go to Audio Recordings</button>
+        </div>
+    </div>
+
+    <div class="audio-recordings-page">
+        
+        <button class="back-button">Back</button>
+        <h2>Audio Recordings</h2>
+        <ul class="audio-recordings-list"></ul>
+        <button class="bottom-button fill-form">Fill Form</button>
+        
+    </div>
+
+    <script>
+        let recordingPage = document.querySelector('.recording-page');
+        let audioRecordingsPage = document.querySelector('.audio-recordings-page');
+        let loginPage = document.querySelector('.login-box');
+        let homeButton = document.querySelector('.home-button');
+        let backButton = document.querySelector('.back-button');
+        let loginButton = document.getElementById('loginButton');
+        let audioRecordingsButton = document.querySelector('.audio-recordings-button');
+        let fillFormButton = document.querySelector('.fill-form');
+        let audioRecordingsList = document.querySelector('.audio-recordings-list');
+        let recordingBox = document.querySelector('.recording-box');
+        let stopwatchElem = document.querySelector('.stopwatch');
+        let pauseButton = document.querySelector('.control-button.pause');
+        let resumeButton = document.querySelector('.control-button.resume');
+        let stopButton = document.querySelector('.control-button.stop');
+
+        let isRecording = false;
+        let mediaRecorder;
+        let recordedChunks = [];
+        let startTime, elapsedTime = 0;
+        let stopwatchInterval;
+
+        loginButton.addEventListener('click', () => {
+            let doctorName = document.getElementById('doctorName').value;
+            let location = document.getElementById('location').value;
+            if (doctorName && location) {
+                loginPage.classList.remove('active');
+                recordingPage.classList.add('active');
+            } else {
+                alert('Please enter the details.');
+            }
+        });
+        
+
+        
+        function startRecording() {
+            if (isRecording) return;
+            recordedChunks = [];
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+                    mediaRecorder.start();
+                    isRecording = true;
+                    startTime = Date.now() - elapsedTime;
+                    updateStopwatch();
+                    stopwatchInterval = setInterval(updateStopwatch, 1000);
+                    recordingBox.querySelector('.recording-text').innerText = 'Recording...';
+                })
+                .catch(console.error);
+        }
+
+        function updateStopwatch() {
+            elapsedTime = Date.now() - startTime;
+            let totalSeconds = Math.floor(elapsedTime / 1000);
+            let minutes = Math.floor(totalSeconds / 60);
+            let seconds = totalSeconds % 60;
+            stopwatchElem.innerText = `${padZero(minutes)}:${padZero(seconds)}`;
+        }
+
+        function padZero(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        function pauseRecording() {
+            if (!isRecording || mediaRecorder.state !== 'recording') return;
+            mediaRecorder.pause();
+            clearInterval(stopwatchInterval);
+            pauseButton.style.display = 'none';
+            resumeButton.style.display = 'inline-block';
+            recordingBox.querySelector('.recording-text').innerText = 'Recording Paused';
+        }
+
+        function resumeRecording() {
+            if (!isRecording || mediaRecorder.state !== 'paused') return;
+            mediaRecorder.resume();
+            startTime = Date.now() - elapsedTime;
+            updateStopwatch();
+            stopwatchInterval = setInterval(updateStopwatch, 1000);
+            pauseButton.style.display = 'inline-block';
+            resumeButton.style.display = 'none';
+            recordingBox.querySelector('.recording-text').innerText = 'Recording...';
+        }
+
+        function stopRecording() {
+            if (!isRecording) return;
+            mediaRecorder.stop();
+            clearInterval(stopwatchInterval);
+            isRecording = false;
+            elapsedTime = 0;
+            stopwatchElem.innerText = '00:00';
+            pauseButton.style.display = 'inline-block';
+            resumeButton.style.display = 'none';
+            recordingBox.querySelector('.recording-text').innerText = 'Start Recording';
+        }
+
+        function deleteRecording() {
+            if (isRecording) return;
+            recordedChunks = [];
+            alert('Recording deleted.');
+        }
+
+        function submitRecording() {
+            if (isRecording) return;
+            let patientName = document.querySelector('.patient-name-input').value;
+            if (!patientName) {
+                alert('Please enter the patient name.');
+                return;
+            }
+            saveRecording(patientName);
+            alert('Recording submitted.');
+        }
+
+        function saveRecording(patientName) {
+            let blob = new Blob(recordedChunks, { type: 'audio/wav' });
+            let url = URL.createObjectURL(blob);
+            let li = document.createElement('li');
+            li.setAttribute('data-index', audioRecordingsList.children.length + 1);
+            let radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'selected-recording';
+            radio.onclick = () => selectRecording(li);
+            li.appendChild(radio);
+            let audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = url;
+            li.appendChild(audio);
+            let downloadButton = document.createElement('button');
+            downloadButton.className = 'download-button';
+            downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+            downloadButton.onclick = () => downloadRecording(blob);
+            li.appendChild(downloadButton);
+            let deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-button';
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteButton.onclick = () => li.remove();
+            li.appendChild(deleteButton);
+            let timeStamp = new Date().toLocaleString();
+            let infoSpan = document.createElement('span');
+            infoSpan.style.marginLeft = '10px';
+            infoSpan.innerText = `(${patientName} - ${timeStamp})`;
+            li.appendChild(infoSpan);
+            audioRecordingsList.appendChild(li);
+        }
+
+        function downloadRecording(blob) {
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'recording.wav';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function selectRecording(selectedLi) {
+            let listItems = document.querySelectorAll('.audio-recordings-list li');
+            listItems.forEach(li => li.classList.remove('selected'));
+            selectedLi.classList.add('selected');
+        }
+
+        function goToAudioRecordings() {
+            recordingPage.classList.remove('active');
+            audioRecordingsPage.classList.add('active');
+        }
+
+        homeButton.addEventListener('click', () => {
+            loginPage.classList.add('active');
+            recordingPage.classList.remove('active');
+            audioRecordingsPage.classList.remove('active');
+        });
+
+        backButton.addEventListener('click', () => {
+            recordingPage.classList.add('active');
+            audioRecordingsPage.classList.remove('active');
+        });
+
+        audioRecordingsButton.addEventListener('click', () => {
+            goToAudioRecordings();
+        });
+
+        fillFormButton.addEventListener('click', () => {
+            alert('Fill form button clicked');
+        });
+    </script>
+</body>
+
+</html>
+
+
+
